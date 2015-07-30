@@ -32,13 +32,13 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity CPU is
     Port ( RST : in  STD_LOGIC;
            CLK : in  STD_LOGIC;
-           ABUS : in  STD_LOGIC_VECTOR (15 downto 0);
-           DBUS : in  STD_LOGIC_VECTOR (15 downto 0);
-           nMREQ : in  STD_LOGIC;
-           nRD : in  STD_LOGIC;
-           nWR : in  STD_LOGIC;
-           nBHE : in  STD_LOGIC;
-           nBLE : in  STD_LOGIC);
+           ABUS : out  STD_LOGIC_VECTOR (15 downto 0);
+           DBUS : inout  STD_LOGIC_VECTOR (15 downto 0);
+           nMREQ : out  STD_LOGIC;
+           nRD : out  STD_LOGIC;
+           nWR : out  STD_LOGIC;
+           nBHE : out  STD_LOGIC;
+           nBLE : out  STD_LOGIC);
 end CPU;
 
 architecture Behavioral of CPU is
@@ -129,7 +129,7 @@ architecture Behavioral of CPU is
 			t : in  STD_LOGIC;                                -- »ØÐ´Ê¹ÄÜ
 			Rtemp : in  STD_LOGIC_VECTOR (7 downto 0);        -- ½ÓÊÕÀ´×Ô´æ´¢¹ÜÀíÄ£¿éµÄ¼Ä´æÆ÷
 			IR : in  STD_LOGIC_VECTOR (15 downto 0);          -- ½ÓÊÕÈ¡Ö¸Ä£¿é´«³öµÄIR
-			z:in STD_LOGIC;                                   --½ÓÊÕALU´«³öµÄz
+			--z:in STD_LOGIC;                                   --½ÓÊÕALU´«³öµÄz
 			cy:in STD_LOGIC;                                  --½ÓÊÕALU´«³öµÄ½øÎ»
 			Rupdate : out  STD_LOGIC;                         -- ¼Ä´æÆ÷»ØÐ´Ê¹ÄÜÐÅºÅ
 			Rdata : out  STD_LOGIC_VECTOR (7 downto 0);       -- ALU Êä³öµÄ¼Ä´æÆ÷»ØÐ´Êý¾Ý
@@ -148,7 +148,7 @@ signal irreq_F_C : STD_LOGIC;                 -- È¡Ö¸ËÍÍù·Ã´æ¿ØÖÆ£¬¸æËßÒªÈ¡Ö¸ÁîÁ
 signal ALUOUT_A_CS : STD_LOGIC_VECTOR(15 downto 0);    ---ALU ËÍÍùÆäËûÄ£¿éµÄaluout
 signal Addr_A_C : STD_LOGIC_VECTOR(15 downto 0);      --- ALU ËÍÍù·Ã´æµÄaddr
 signal Rupdate_W_A : STD_LOGIC;                         ---»ØÐ´Ä£¿éËÍÍùALUµÄ¸ü¸Ä¼Ä´æÆ÷Ê¹ÄÜÐÅºÅ
-signal Rdata_W_A : STD_LOGIC_VECTOR(15 downto 0);         ----»ØÐ´Ä£¿éÊä³öµÄÒª¸üÐÂµÄ¼Ä´æÆ÷µÄÖµ
+signal Rdata_W_A : STD_LOGIC_VECTOR(7 downto 0);         ----»ØÐ´Ä£¿éÊä³öµÄÒª¸üÐÂµÄ¼Ä´æÆ÷µÄÖµ
 signal data_C_S : STD_LOGIC_VECTOR(7 downto 0);           -- È¡ÊýµÄÊ±ºòÊ¹ÓÃ
 signal nMWR_S_C : STD_LOGIC;                              --Ð´ÊýÊ¹ÄÜ
 signal nMRD_S_C : STD_LOGIC;                              --¶ÁÊýÊ¹ÄÜ
@@ -156,12 +156,12 @@ signal Rtemp_S_W : STD_LOGIC_VECTOR(7 downto 0);          -- ´æ´¢Ä£¿éÏò»ØÐ´Ä£¿é
 signal cy_A_W : STD_LOGIC;                                --½øÎ»
 begin
 	
-	clock: clock port map(CLK, RST, t);
-	fetch: fetch port map(IR_C_F, PCnew_W_F, CLK , PCupdate_W_F, RST, t(0), t(1), irout_F_ASW, PCout_F_CW, irreq_F_C);
-	ALU: ALU port map(t(2), irout_F_ASW, ALUOUT_A_CS, Addr_A_C, Rupdate_W_A, Rdata_W_A, cy_A_W);
-	control: control port map(irreq_F_C, IR_C_F, PCout_F_CW, ALUOUT_A_CS(7 downto 0), Addr_A_C, ABUS, DBUS, nWR, nRD, nMREQ, nBHE, nBLE, nMWR_S_C, nMRD_S_C , data_C_S);
-	save: save port map(t(3), ALUOUT_A_CS(7 downto 0), data_C_S, nMWR_S_C, irout_F_ASW, nMRD_S_C, Rtemp_S_W);
-	write_back: write_back port map(PCout_F_CW, t(4), Rtemp_S_W, irout_F_ASW, z, cy_A_W, Rupdate_W_A, Rdata_W_A, PCupdate_W_F, PCnew_W_F);
+	u1: clock port map(CLK, RST, t);
+	u2: fetch port map(IR_C_F, PCnew_W_F, CLK , PCupdate_W_F, RST, t(0), t(1), irout_F_ASW, PCout_F_CW, irreq_F_C);
+	u3: ALU port map(t(2), irout_F_ASW, ALUOUT_A_CS, Addr_A_C, Rupdate_W_A, Rdata_W_A, cy_A_W);
+	u4: control port map(irreq_F_C, IR_C_F, PCout_F_CW, ALUOUT_A_CS(7 downto 0), Addr_A_C, ABUS, DBUS, nWR, nRD, nMREQ, nBHE, nBLE, nMWR_S_C, nMRD_S_C , data_C_S);
+	u5: save port map(t(3), ALUOUT_A_CS(7 downto 0), data_C_S, nMWR_S_C, irout_F_ASW, nMRD_S_C, Rtemp_S_W);
+	u6: write_back port map(PCout_F_CW, t(4), Rtemp_S_W, irout_F_ASW, cy_A_W, Rupdate_W_A, Rdata_W_A, PCupdate_W_F, PCnew_W_F);
 
 end Behavioral;
 
