@@ -68,16 +68,16 @@ begin
 process(IRreq,nMRD,nMWR)
 	begin 
 		DBUS<="ZZZZZZZZZZZZZZZZ";
-      if IRreq ='1' then   --取指模块
+      if (IRreq ='1' and nMRD = '1' and nMWR = '1') then   --取指模块
 			nBHE <= '0';
-			nBLE <= '0';--高低位都?行?		
+			nBLE <= '0';--高低位		
 			nMREQ <= '0';
 			nWR <= '1';
 			nRD <= '0';--读有效，低电位有效
 			IR <= DBUS;	
          --DBUS<="ZZZZZZZZZZZZZZZZ";	
 			ABUS<=PCout;		
-		elsif nMRD = '0' then --需要读内存(运算模块)---读取使能，低电平有效
+		elsif (nMRD = '0' and IRreq ='0' and nMWR = '1') then --需要读内存(运算模块)---读取使能，低电平有效
 			nBHE <= '1';
 			nBLE <= '0';
 			nMREQ <= '0';
@@ -87,7 +87,7 @@ process(IRreq,nMRD,nMWR)
 			--data <= "00100101";
 			data<=DBUS(7 downto 0);	
 			--DBUS<="ZZZZZZZZZZZZZZZZ";	
-		elsif nMWR = '0' then --写内存(运算模块)
+		elsif (nMWR = '0' and IRreq ='0' and nMRD = '1') then --写内存(运算模块)
 		   nBHE <= '1';
 		   nBLE <= '0';
 		   nMREQ <= '0';

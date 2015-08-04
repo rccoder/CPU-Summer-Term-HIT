@@ -120,6 +120,8 @@ BEGIN
 		pcupdate <= '0';
 		t1 <= '1';
 		wait for 100ns;
+		--下面一行是刚才修改的
+		t0 <= '1';
 		pcupdate <= '1';
 		t1 <= '0';
 		wait for 100ns;

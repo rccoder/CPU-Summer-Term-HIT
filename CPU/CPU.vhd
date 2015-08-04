@@ -38,7 +38,17 @@ entity CPU is
            nRD : out  STD_LOGIC;
            nWR : out  STD_LOGIC;
            nBHE : out  STD_LOGIC;
-           nBLE : out  STD_LOGIC);
+           nBLE : out  STD_LOGIC;
+			  s1 : out STD_LOGIC;
+			  s2 : out STD_LOGIC;
+			  s3 : out STD_LOGIC;
+			  s4 : out STD_LOGIC;
+			  s5 : out STD_LOGIC;
+			  
+			  s7 : out STD_LOGIC;
+			  
+			  i : out STD_LOGIC_VECTOR(15 downto 0)
+			  );
 end CPU;
 
 architecture Behavioral of CPU is
@@ -53,7 +63,7 @@ architecture Behavioral of CPU is
 	component fetch is
 		port (
 			irnew : in  STD_LOGIC_VECTOR (15 downto 0);        --访存模块输入的IR
-         pcnew : in  STD_LOGIC_VECTOR (15 downto 0);        --回写模块，更新PC
+         pcnew : in  STD_LOGIC_VECTOR (15 downto 0);        --回写模块，更翽C
          clk : in  STD_LOGIC;                               --节拍
          pcupdate : in  STD_LOGIC;                          --告诉要更新PC了
          reset : in  STD_LOGIC;                             --复位
@@ -68,7 +78,7 @@ architecture Behavioral of CPU is
 	component ALU is
 		port (
 		   -- 实现准备和运算功能
-		   enable_t : in std_logic; -- 准备和运算功能使能信号
+		   enable_t : in std_logic; -- 准备和运算功苁鼓苄藕?	
 			ir : in std_logic_vector(15 downto 0);   --16位的IR信号
 	  
 			-- 向访存控制模块输出
@@ -154,6 +164,7 @@ signal nMWR_S_C : STD_LOGIC;                              --写数使能
 signal nMRD_S_C : STD_LOGIC;                              --读数使能
 signal Rtemp_S_W : STD_LOGIC_VECTOR(7 downto 0);          -- 存储模块向回写模块
 signal cy_A_W : STD_LOGIC;                                --进位
+
 begin
 	
 	u1: clock port map(CLK, RST, t);
@@ -163,5 +174,14 @@ begin
 	u5: save port map(t(3), ALUOUT_A_CS(7 downto 0), data_C_S, nMWR_S_C, irout_F_ASW, nMRD_S_C, Rtemp_S_W);
 	u6: write_back port map(PCout_F_CW, t(4), Rtemp_S_W, irout_F_ASW, cy_A_W, Rupdate_W_A, Rdata_W_A, PCupdate_W_F, PCnew_W_F);
 
+	s1 <= t(0);
+	s2 <= t(1);
+	s3 <= t(2);
+	s4 <= t(3);
+	s5 <= t(4);
+	
+	s7 <= Rupdate_W_A;
+	
+	i <= IR_C_F;
 end Behavioral;
 

@@ -113,7 +113,7 @@ BEGIN
       -- hold reset state for 100 ns
 		
 		
-		--- ȡָ
+		--- ??
 		wait for 100 ns;
 		nMRD <= '1';
 		nMWR <= '1';

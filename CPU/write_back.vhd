@@ -37,7 +37,7 @@ Port (
     t : in  STD_LOGIC;                                -- 回写使能
 	 Rtemp : in  STD_LOGIC_VECTOR (7 downto 0);        -- 接收来自存储管理模块的寄存器
     IR : in  STD_LOGIC_VECTOR (15 downto 0);          -- 接收取指模块传出的IR
-	 z:in STD_LOGIC;                                   --接收ALU传出的z
+	 --z:in STD_LOGIC;                                   --接收ALU传出的z
 	 cy:in STD_LOGIC;                                  --接收ALU传出的进位
     Rupdate : out  STD_LOGIC;                         -- 寄存器回写使能信号
 	 Rdata : out  STD_LOGIC_VECTOR (7 downto 0);       -- ALU 输出的寄存器回写数据
@@ -51,7 +51,7 @@ architecture Behavioral of write_back is
 --signal tempb:std_logic_vector(15 downto 0);
 begin 
   -- tempa<="00000000"&(IR(7 downto 0));
-	process(t, z, cy, IR)
+	process(t, cy, IR)
 	begin 
 		if t='1' then 
 			case IR(15 downto 11) is 
@@ -61,7 +61,8 @@ begin
 				   PCnew <= "00000000"&(IR(7 downto 0));
 				when "10000" =>     --jz
 					Rupdate <= '0';
-					if  z='1' then
+					if (Rtemp(7 downto 0) = "00000000") then
+					--if  z='1' then
 						PCnew <= "00000000"&(IR(7 downto 0));
 						PCupdate <= '1';
                else

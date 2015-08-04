@@ -30,10 +30,11 @@ use IEEE.STD_LOGIC_1164.ALL;
 --use UNISIM.VComponents.all;
 
 entity save is
-    Port ( t : in  STD_LOGIC;
-		 ALUOUT : in std_logic_vector(7 downto 0);
-		 data : in std_logic_vector(7 downto 0);       --- ALU输出的值
-		 nMWR : out std_logic;                         --- 接收区属的时候访存控制的数据
+    Port ( 
+		 t : in  STD_LOGIC;
+		 ALUOUT : in std_logic_vector(7 downto 0);      --- 取数的时候用
+		 data : in std_logic_vector(7 downto 0);       --- 接收区属的时候访存控制的数据
+		 nMWR : out std_logic;                         
        IR : in  STD_LOGIC_VECTOR (15 downto 0);
        nMRD : out  STD_LOGIC;
 		 Rtemp : out std_logic_vector(7 downto 0));    --- 回写模块要输

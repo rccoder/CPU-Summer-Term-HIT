@@ -82,7 +82,8 @@ tempb := '0'&b;
 			--when "11100"=>  tempsum :=tempa;                   --OUT
 			when others=>	 tempsum :="ZZZZZZZZZ";
 		end case;
-	sig_reg7aluout <= reg(7)&tempsum ( 7 downto 0 );
+	--sig_reg7aluout <= reg(7)&tempsum ( 7 downto 0 );
+	sig_reg7aluout <= "00000000"&tempsum ( 7 downto 0 );
 	cy <= tempsum (8) ;
 	sig_reg7addrout <= reg(7)&addr;
 	end if ;
